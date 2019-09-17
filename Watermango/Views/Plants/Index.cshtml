@@ -5,101 +5,126 @@
 }
 
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<h2>Watermango</h2>
+<div id="watermango" class="mt-5">
+    <h2>Watermango</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            Name
-        </th>
-        <th>
-            Status
-        </th>
-        <th>
-            Last Watered
-        </th>
-        <th></th>
-    </tr>
-
-    <tr v-for="">
-        <td>
-            @*@Html.DisplayFor(modelItem => item.Name)*@
-        </td>
-        <td>
-            @*@Html.DisplayFor(modelItem => item.Status)*@
-        </td>
-        <td>
-            @*@Html.DisplayFor(modelItem => item.LastWatered)*@
-        </td>
-        <td>
-            @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-            @Html.ActionLink("Water", "Water", new { id = item.Id })*@
-        </td>
-    </tr>
-
-</table>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Status)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastWatered)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <table class="table">
         <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Last Watered
+            </th>
+            <th></th>
+        </tr>
+
+        <tr v-for="plant in plantsArr">
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @*@Html.DisplayFor(modelItem => item.Name)*@
+                {{plant.name}}
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @*@Html.DisplayFor(modelItem => item.Status)*@
+                {{plant.status}}
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LastWatered)
+                @*@Html.DisplayFor(modelItem => item.LastWatered)*@
+                {{plant.lastWatered}}
             </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |*@
-                @Html.ActionLink("Water Plant", "Water", new { id = item.Id })
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+                    @Html.ActionLink("Water", "Water", new { id = item.Id })*@
+                <a href="#" v-on:click="waterPlant(plant)">Water Plant</a>
             </td>
         </tr>
-    }
 
-</table>
+    </table>
+
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastWatered)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastWatered)
+                </td>
+                <td>
+                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |*@
+                    @Html.ActionLink("Water Plant", "Water", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
 
 <script>
-    var plantsArr = [];
 
-    window.setInterval(function () {
-        $.ajax({
-            url: 'https://localhost:44373/api/Plants',
-            success: function (result) {
-                plantsArr = result;
-                plantsArr.forEach(function (plant) {
-                    var date = new Date(plant.lastWatered);
-                    var now_utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-                    var seconds = now_utc.getTime() / 1000;
-                    console.log(now_utc);
-                    var curDate = new Date();
-                    var curSeconds = curDate.getTime() / 1000;
-                    console.log(curDate);
-                    if (curSeconds > (seconds + 30))
-                        alert(plant.name + " needs water!");
+    var app = new Vue({
+        el: '#watermango',
+        data: {
+            plantsArr: [],
+            plant: '',
+        },
+        created: function () {    
+            
+            axios
+                .get('https://localhost:44373/api/plants')
+                .then(function (response) {
+                    var tempArr = response.data;
+                    app.plantsArr = tempArr;
+                    
+                });
+            //window.setInterval(function () {
+            //    tempArr.forEach(function (plant) {
+            //        var date = new Date(plant.lastWatered);
+            //        var now_utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+            //        var seconds = now_utc.getTime() / 1000;
+            //        console.log(now_utc);
+            //        var curDate = new Date();
+            //        var curSeconds = curDate.getTime() / 1000;
+            //        console.log(curDate);
+            //        if (curSeconds > (seconds + 30))
+            //            alert(plant.name + " needs water!");
+            //    })
+            //}, 30000);
+        },
+        methods: {
+            waterPlant: function(plant) {
+                axios
+                .get('https://localhost:44373/api/plants/' + plant.id).then(function (response) {
+                    var tempPlant = response.data;
+                    this.plant = tempPlant;
                 });
             }
-        });
-    }, 30000);
-
+        }
+    })
 </script>

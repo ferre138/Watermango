@@ -182,3 +182,4 @@ C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.cspr
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.csproj.CopyComplete
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.dll
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.pdb
+C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.Migrations.addLastWateredAnnotation.resources

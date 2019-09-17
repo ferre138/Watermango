@@ -177,6 +177,10 @@
     <Compile Include="Migrations\201909170222322_SeedDbWithPlants.Designer.cs">
       <DependentUpon>201909170222322_SeedDbWithPlants.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909172008260_addLastWateredAnnotation.cs" />
+    <Compile Include="Migrations\201909172008260_addLastWateredAnnotation.Designer.cs">
+      <DependentUpon>201909172008260_addLastWateredAnnotation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Plant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -295,6 +299,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201909170222322_SeedDbWithPlants.resx">
       <DependentUpon>201909170222322_SeedDbWithPlants.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909172008260_addLastWateredAnnotation.resx">
+      <DependentUpon>201909172008260_addLastWateredAnnotation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
