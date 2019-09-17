@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Watermango.Models.Plant>
+
+@{
+    ViewBag.Title = "Watermango";
+}
+
+<h2>Watermango</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastWatered)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastWatered)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+            @Html.ActionLink("Water", "Water", new { id = item.Id })
+        </td>
+    </tr>
+}
+
+</table>
+
+<script>
+    var plantsArr = [];
+
+    window.setInterval(function () {
+        $.ajax({
+            url: 'https://localhost:44373/api/Plants',
+            success: function (result) {
+                plantsArr = result;
+                plantsArr.forEach(function (plant) {
+                    var date = new Date(plant.lastWatered);
+                    var now_utc = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+                    var seconds = now_utc.getTime() / 1000;
+                    console.log(now_utc);
+                    var curDate = new Date();
+                    var curSeconds = curDate.getTime() / 1000;
+                    console.log(curDate);
+                    if (curSeconds > (seconds + 30))
+                        alert(plant.name + " needs water!");
+                });
+            }
+        });
+    }, 30000);
+    
+</script>
