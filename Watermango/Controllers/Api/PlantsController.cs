@@ -17,10 +17,23 @@ namespace Watermango.Controllers.Api
         // GET api/plants
         public IHttpActionResult GetPlants()
         {
+            DateTime currentTime = DateTime.Now;
+            List<Plant> plants = _context.Plants.ToList();
+            foreach (Plant plant in plants){
+                double timeSinceLastWatering = currentTime.Subtract(plant.LastWatered).TotalMinutes;
+                if(timeSinceLastWatering > 1)
+                {
+                    plant.Status = "Needs water!";
+                    _context.Entry(plant).State = EntityState.Modified;
+                }
+            }
+            _context.SaveChanges();
             return Ok(_context.Plants.ToList());
         }
 
-        // GET api/plants/5
+        // PUT api/plants/5
+        [HttpPut]
+        [Route("api/plants/{id}")]
         public IHttpActionResult WaterPlant(int? id)
         {
             DateTime currentTime = DateTime.Now;
@@ -32,12 +45,11 @@ namespace Watermango.Controllers.Api
             double timeBetweenWatering = currentTime.Subtract(plant.LastWatered).TotalSeconds;
             if (timeBetweenWatering > 30)
             {
-                plant.LastWatered = currentTime.AddSeconds(10);
+                plant.LastWatered = currentTime;
                 plant.Status = "Watered";
-                _context.Entry(plant).State = EntityState.Modified;
-                _context.SaveChanges();
             }
-            return Ok(_context.Plants.ToList());
+            _context.SaveChanges();
+            return Ok(plant);
         }
     }
 }

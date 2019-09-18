@@ -183,3 +183,4 @@ C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.cspr
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.dll
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.pdb
 C:\Users\jcunha\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.Migrations.addLastWateredAnnotation.resources
+C:\Users\Jayme\Documents\GitHub\Watermango\Watermango\obj\Debug\Watermango.Migrations.addLastWateredAnnotation.resources
