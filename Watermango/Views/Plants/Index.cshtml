@@ -8,20 +8,44 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
-<div id="watermango" class="mt-5">
+<style>
+    .bottom-right{
+        top: 0;
+        right: 0;
+    }
+    [v-cloak] {
+      display: none;
+    }
+</style>
+
+<!--Watermango table-->
+<div id="watermango" class="mt-5" v-cloak>
     <div class="container">
         <div class="row">
-            <div class="position-absolute d-flex flex-column p-4">
+            <div class="position-absolute d-flex flex-column p-4 ml-auto bottom-right">
                 <template v-for="(plant, index) in plantsArr">
-                    <div v-bind:id="'plant' + plant.id" class="toast ml-auto" role="alert" data-delay="700" data-autohide="false">
-                        <div class="toast-header">
-                            <strong class="mr-auto text-danger">Needs watering</strong>
+                    <div v-bind:id="'needsWater' + plant.id" class="toast ml-auto" role="alert" data-delay="700" data-autohide="false">
+                        <div class="toast-header bg-danger">
+                            <strong class="mr-auto text-light">{{ plant.name }}</strong>
                             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="toast-body">
                             Hey, there! {{ plant.name }} needs watering!
+                        </div>
+                    </div>
+                </template>
+                <template v-for="(plant, index) in plantsArr">
+                    <div v-bind:id="'tooSoon' + plant.id" class="toast ml-auto" role="alert" data-delay="2000" data-autohide="true">
+                        <div class="toast-header bg-info">
+                            <strong class="mr-auto text-light">{{ plant.name }}</strong>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            {{ plant.name }} has been watered recently, please wait 30 seconds between waterings.
                         </div>
                     </div>
                 </template>
@@ -33,7 +57,7 @@
     <table class="table">
         <tr>
             <th>
-                Name
+                Plant Name
             </th>
             <th>
                 Status
@@ -46,103 +70,56 @@
 
         <tr v-for="(plant, index) in plantsArr">
             <td>
-                @*@Html.DisplayFor(modelItem => item.Name)*@
                 {{plant.name}}
             </td>
             <td>
-                @*@Html.DisplayFor(modelItem => item.Status)*@
-                {{plant.status}}
+                {{plant.status}} <b-spinner v-show="plant.status === 'Watering...'" variant="primary" type="grow" label="Spinning"></b-spinner>
             </td>
             <td>
-                @*@Html.DisplayFor(modelItem => item.LastWatered)*@
                 {{plant.lastWateredUTC}}
             </td>
             <td>
-                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-                    @Html.ActionLink("Water", "Water", new { id = item.Id })*@
-                <button type="button" class="btn btn-success" v-on:click="waterPlant(plant, index, $event)">Water Plant</button>
+                <button type="button" class="btn btn-success" v-on:click="waterPlant(plant, index, $event); isWater = true">Water Plant</button>
+                @*<button v-else type="button" class="btn btn-danger" v-on:click="waterPlant(plant, index, $event); isWater = false">Stop</button>*@
             </td>
         </tr>
-
-    </table>
-
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastWatered)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastWatered)
-                </td>
-                <td>
-                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |*@
-                    @Html.ActionLink("Water Plant", "Water", new { id = item.Id })
-                </td>
-            </tr>
-        }
 
     </table>
 </div>
 
-<script>
-
+<script type="text/javascript">
     var app = new Vue({
         el: '#watermango',
         data: {
             plantsArr: [],
             plant: '',
+            isWater: false,
         },
         created: function () {
             this.getPlants();
-            $('#spinner').hide();
         },
         mounted: function () {
             this.$nextTick(function () {
                 setTimeout(function checkWater() {
                     app.getPlants();
-                    app.isWateredToast()
-                    setTimeout(checkWater, 60000);
+                    app.needsWaterToast()
+                    setTimeout(checkWater, 30000);
                 }, 1000);
             });
         },
         methods: {
             waterPlant: function (plant, index, e) {
                 var thisPlantBtn = e.target;
-                this.getPlants();
                 var tempPlant = app.plantsArr[index];
-                var date = new Date(tempPlant.lastWatered);
-                var lastWateredUTC = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-                var seconds = lastWateredUTC.getTime() / 1000;
+                var seconds = tempPlant.lastWateredUTC.getTime() / 1000;
                 var now = new Date(Date.now());
                 var currentSeconds = now.getTime() / 1000;
                 var diff = currentSeconds - seconds;
+                var timeoutFn;
                 if (currentSeconds > seconds + 30) {
                     console.log("It's been over 30 seconds since last watered. You can water it now! " + currentSeconds + " - " + seconds + " = " + diff);
-                    $('#plant' + plant.id + '.toast').toast("hide");
-                    thisPlantBtn.disabled = true;
-                    setTimeout(function () {
+                    $('#needsWater' + plant.id + '.toast').toast("hide");
+                    timeoutFn = setTimeout(function () {
                         axios
                             .put('https://localhost:44373/api/plants/' + plant.id).then(function (response) {
                                 var tempArr = response.data;
@@ -150,34 +127,46 @@
                                     var date = new Date(plant.lastWatered);
                                     var lastWateredUTC = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
                                     plant["lastWateredUTC"] = lastWateredUTC;
-                                })
+                                });
                                 app.plantsArr = tempArr;
+                                //thisPlantBtn.disabled = false;
                             })
-                            .finally(function () { thisPlantBtn.disabled = false;})
+                            .catch(error => {
+                                console.log(error.response)
+                            });
                     }, 10000);
+                    thisPlantBtn.disabled = true;
+                    app.plantsArr[index].status = 'Watering...';
+                }
+                else if (currentSeconds < seconds + 10) {
+                    clearTimeout(timeoutFn);
                 }
                 else {
                     console.log("It hasn't been 30 seconds yet, you will need to wait!" + currentSeconds + " - " + seconds + " = " + diff);
+                    $('#tooSoon'+plant.id + '.toast').toast("show");
                     thisPlantBtn.disabled = false;
                 }
             },
             getPlants: function () {
                 axios
-                .get('https://localhost:44373/api/plants')
-                .then(function (response) {
-                    var tempArr = response.data;
-                    tempArr.forEach(function (plant) {
-                        var date = new Date(plant.lastWatered);
-                        var lastWateredUTC = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-                        plant["lastWateredUTC"] = lastWateredUTC;
+                    .get('https://localhost:44373/api/plants')
+                    .then(function (response) {
+                        var tempArr = response.data;
+                        tempArr.forEach(function (plant) {
+                            var date = new Date(plant.lastWatered);
+                            var lastWateredUTC = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+                            plant["lastWateredUTC"] = lastWateredUTC;
+                        })
+                        app.plantsArr = tempArr;
                     })
-                    app.plantsArr = tempArr;
-                });
+                    .catch(error => {
+                        console.log(error.response)
+                    });
             },
-            isWateredToast: function () {
+            needsWaterToast: function () {
                 this.plantsArr.forEach(function (plant) {
                     if (plant.status === "Needs water!")
-                        $('#plant'+plant.id + '.toast').toast("show");
+                        $('#needsWater'+plant.id + '.toast').toast("show");
                 });
             } 
         }

@@ -164,7 +164,6 @@
     <Compile Include="Controllers\Api\PlantsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PlantsController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Data\ApplicationDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -273,10 +272,6 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Plants\Create.cshtml" />
-    <Content Include="Views\Plants\Delete.cshtml" />
-    <Content Include="Views\Plants\Details.cshtml" />
-    <Content Include="Views\Plants\Edit.cshtml" />
     <Content Include="Views\Plants\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

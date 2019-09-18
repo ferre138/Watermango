@@ -49,7 +49,7 @@ namespace Watermango.Controllers.Api
                 plant.Status = "Watered";
             }
             _context.SaveChanges();
-            return Ok(plant);
+            return Ok(_context.Plants.ToList());
         }
     }
 }
