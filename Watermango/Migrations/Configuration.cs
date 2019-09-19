@@ -19,6 +19,7 @@ namespace Watermango.Migrations
                 new Plant { Id = 1, Name = "Plant 1", Status = "Needs water", LastWatered = new DateTime(2018, 5, 1) },
                 new Plant { Id = 2, Name = "Plant 2", Status = "Needs water", LastWatered = new DateTime(2018, 4, 4) },
                 new Plant { Id = 3, Name = "Plant 3", Status = "Needs water", LastWatered = new DateTime(2018, 5, 13) },
+                new Plant { Id = 4, Name = "Plant 4", Status = "Needs water", LastWatered = new DateTime(2018, 6, 6) },
                 new Plant { Id = 4, Name = "Plant 4", Status = "Needs water", LastWatered = new DateTime(2018, 6, 6) }
               );
 

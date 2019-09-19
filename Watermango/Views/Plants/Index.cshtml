@@ -9,9 +9,9 @@
 <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
 <style>
-    .bottom-right{
+    .top-left{
         top: 0;
-        right: 0;
+        left: 0;
     }
     [v-cloak] {
       display: none;
@@ -22,7 +22,7 @@
 <div id="watermango" class="mt-5" v-cloak>
     <div class="container">
         <div class="row">
-            <div class="position-absolute d-flex flex-column p-4 ml-auto bottom-right">
+            <div class="position-absolute d-flex flex-column p-4 ml-auto top-left">
                 <template v-for="(plant, index) in plantsArr">
                     <div v-bind:id="'needsWater' + plant.id" class="toast ml-auto" role="alert" data-delay="700" data-autohide="false">
                         <div class="toast-header bg-danger">
@@ -80,7 +80,6 @@
             </td>
             <td>
                 <button type="button" class="btn btn-success" v-on:click="waterPlant(plant, index, $event); isWater = true">Water Plant</button>
-                @*<button v-else type="button" class="btn btn-danger" v-on:click="waterPlant(plant, index, $event); isWater = false">Stop</button>*@
             </td>
         </tr>
 
@@ -104,7 +103,7 @@
                     app.getPlants();
                     app.needsWaterToast()
                     setTimeout(checkWater, 30000);
-                }, 1000);
+                }, 500);
             });
         },
         methods: {
@@ -137,9 +136,6 @@
                     }, 10000);
                     thisPlantBtn.disabled = true;
                     app.plantsArr[index].status = 'Watering...';
-                }
-                else if (currentSeconds < seconds + 10) {
-                    clearTimeout(timeoutFn);
                 }
                 else {
                     console.log("It hasn't been 30 seconds yet, you will need to wait!" + currentSeconds + " - " + seconds + " = " + diff);
